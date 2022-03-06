@@ -1,9 +1,16 @@
 const express = require('express') //commonJS module syntax, equivalent to import exoprt ES6 syntax
+const morgan = require('morgan')
+
 //while the http webpack provided by nodeJS can do the work as well
 //express makes it more convenient => try it out
 const app = express() //initialize the app through express 
 
 app.use(express.json()) //body-parser, essentially allow reqested data to be parsed into body
+
+morgan.token('content',(req,res) => {
+    return JSON.stringify(req.body) 
+})
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
 
 let phonebook = [
     { 
