@@ -6,12 +6,18 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "log:prod": "heroku logs -tail",
+    "deploy": "git add . && git commit -m update && git push heroku master",
+    "build:ui": "rm -rf build && cd ../frontend && rm -rf build && npm run build && cp -r build ../backend",
+    "deploy:full": "npm run build:ui && npm run deploy"
   },
   "author": "Will",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.17.3"
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

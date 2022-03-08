@@ -1,11 +1,14 @@
 const express = require('express') //commonJS module syntax, equivalent to import exoprt ES6 syntax
 const morgan = require('morgan')
+const cors = require('cors')
 
 //while the http webpack provided by nodeJS can do the work as well
 //express makes it more convenient => try it out
 const app = express() //initialize the app through express 
 
 app.use(express.json()) //body-parser, essentially allow reqested data to be parsed into body
+app.use(cors())
+app.use(express.static('build'))
 
 morgan.token('content',(req,res) => {
     return JSON.stringify(req.body) 
@@ -34,6 +37,7 @@ let phonebook = [
       "number": "39-23-6423122"
     }
 ]
+
 app.get('/',(req,res) => {
     console.log('connected')
 })
@@ -67,14 +71,6 @@ const generateId = () => {
     return Math.floor(Math.random()*range)
 }
 
-const alreadyExist = (name) => {
-    for (let ele of phonebook) {
-        if (ele.name === name) return true
-    }
-    return false
-}
-
-
 //for now, we don't have any actual input or output
 app.post('/api/persons',(req,res) => {
     let body = req.body
@@ -90,10 +86,6 @@ app.post('/api/persons',(req,res) => {
         res.status(400).json({
             error: text
         })
-    } else if (alreadyExist(body.name)) {
-        res.status(400).json({
-            error: "name must be unique"
-        })
     } else {
         const info = {
             "id": generateId(),
@@ -101,11 +93,27 @@ app.post('/api/persons',(req,res) => {
             "number": body.number
         }
         phonebook = phonebook.concat(info)
-        res.json(phonebook)
+        res.json(info)
     }
 })
 
-const PORT = 3001
+app.put('/api/persons/:id',(req,res) => {
+    let id = parseInt(req.params.id)
+    let person = phonebook.find(ele => ele.id === id)
+    if (!person) {
+        res.status(404).end()
+    } else {
+        const newPerson = {
+            'id': id,
+            'name': req.body.name,
+            'number': req.body.number
+        }
+        phonebook = phonebook.filter(ele => ele.id !== id).concat(newPerson)
+        res.json(newPerson)
+    }
+})
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })
