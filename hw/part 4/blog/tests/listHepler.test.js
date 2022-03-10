@@ -1,4 +1,4 @@
-const {dummy,totalLikes,favoriteBlog} = require("../utils/list_helper")
+const {dummy,totalLikes,favoriteBlog,mostBlogs} = require("../utils/list_helper")
 
 describe("weird ass function dummy",() => {
   test("dummy returns one",() => {
@@ -8,6 +8,13 @@ describe("weird ass function dummy",() => {
 
 const arr = [
   {
+    _id: "5a422aa71b54a676234d17f8",
+    title: "Road to serfdom",
+    author: "Hayek",
+    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    likes: 0,
+    __v: 0
+  }, {
     _id: "5a422aa71b54a676234d17f8",
     title: "Go To Statement Considered Harmful",
     author: "Edsger W. Dijkstra",
@@ -47,5 +54,11 @@ describe("testing function favoriteBlog", () => {
   test("muliple elements result in sum",() => {
     const [title,author,likes] = [arr[1].title,arr[1].author,arr[1].likes]
     expect(favoriteBlog(arr)).toEqual({title,author,likes})
+  })
+})
+
+describe("testing function mostBlogs", () => {
+  test("equal to one author",() => {
+    expect(mostBlogs(arr)).toEqual({author: "Edsger W. Dijkstra", blogs: 2})
   })
 })

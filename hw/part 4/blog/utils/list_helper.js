@@ -7,14 +7,6 @@ const totalLikes = (blogList) => {
   return blogList.reduce((accu,ele) => accu+ele.likes,0)
 }
 
-/**
- * 
- * {
-    title: "Canonical string reduction",
-    author: "Edsger W. Dijkstra",
-    likes: 12
-  }
- */
 const favoriteBlog = (blogList) => {
   let max = -1, favBlog = null
   for (let blog of blogList) {
@@ -30,4 +22,19 @@ const favoriteBlog = (blogList) => {
   return favBlog
 }
 
-module.exports = {dummy,totalLikes,favoriteBlog}
+const mostBlogs = (blogList) => {
+  let map = new Map() //could also use trie to store the author name
+  //the best practice may be storing a cache, 
+  //so that we don't have to traverse the whole array each time the function is called
+  let max = -1, mostAuth = ""
+  for (let blog of blogList) {
+    let author = blog.author
+    if (!map.has(author)) map.set(author,0)
+    let amount = map.get(author)+1
+    map.set(author,amount)
+    if (max<amount) max = amount, mostAuth = author
+  }
+  return {author: mostAuth, blogs:max}
+}
+
+module.exports = {dummy,totalLikes,favoriteBlog,mostBlogs}
