@@ -1,4 +1,4 @@
-const {dummy,totalLikes,favoriteBlog,mostBlogs} = require("../utils/list_helper")
+const {dummy,totalLikes,favoriteBlog,mostBlogs,mostLikes} = require("../utils/list_helper")
 
 describe("weird ass function dummy",() => {
   test("dummy returns one",() => {
@@ -36,7 +36,7 @@ describe("testing function totalLikes",() => {
     expect(totalLikes([])).toBe(0)
   })
   test("one element equals itself",() => {
-    expect(totalLikes([arr[0]])).toBe(5)
+    expect(totalLikes([arr[1]])).toBe(5)
   })
   test("muliple elements result in sum",() => {
     expect(totalLikes(arr)).toBe(14)
@@ -52,7 +52,7 @@ describe("testing function favoriteBlog", () => {
     expect(favoriteBlog([arr[0]])).toEqual({title,author,likes})
   })
   test("muliple elements result in sum",() => {
-    const [title,author,likes] = [arr[1].title,arr[1].author,arr[1].likes]
+    const [title,author,likes] = [arr[2].title,arr[2].author,arr[2].likes]
     expect(favoriteBlog(arr)).toEqual({title,author,likes})
   })
 })
@@ -60,5 +60,11 @@ describe("testing function favoriteBlog", () => {
 describe("testing function mostBlogs", () => {
   test("equal to one author",() => {
     expect(mostBlogs(arr)).toEqual({author: "Edsger W. Dijkstra", blogs: 2})
+  })
+})
+
+describe("testing function mostLikes", () => {
+  test("equal to the likes of one author",() => {
+    expect(mostLikes(arr)).toEqual({author: "Edsger W. Dijkstra", likes: 14})
   })
 })
