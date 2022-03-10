@@ -77,19 +77,21 @@ app.post('/api/persons',(req,res) => {
 })
 
 app.put('/api/persons/:id',(req,res,next) => {
-    const updateInfo = {
-        'name': req.body.name,
-        'number': req.body.number
-    }
-    PhoneBook.findByIdAndUpdate(req.params.id,updateInfo,{new: true}) // 
+    const {name,number} = req.body
+    PhoneBook.findByIdAndUpdate(
+        req.params.id,
+        {name,number},
+        {new: true,runValidators: true, context:'query'}
+    )  
         .then(updatedContact => res.json(updatedContact))
-        .catch(error => console.log(error))
+        .catch(error => next(error))
 })
 
 //thie errorHandler is designed specific for malformatted id
 const errorHandler = (err,req,res,next) => {
     console.log(err.message)
-    if (err.name === 'CastEror') return res.status(400).send({error: 'malformatted id'})
+    if (err.name === 'CastError') return res.status(400).send({message: 'malformatted id'})
+    else if (err.name === 'ValidationError') return res.status(400).json({message: err.message})
     next(err)
 }
 app.use(errorHandler)

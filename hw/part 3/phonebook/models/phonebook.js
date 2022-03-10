@@ -9,10 +9,22 @@ mongoose.connect(url)
         console.log('connection failed due to: ',err.message)
     })
 
+const validator = c => /^\d{2,4}[-]\d{5,}$/.test(c)
+const message = prop => `${prop.values} does not abide valid number format`
+
 //create the phoneBook cluster
 const contactSchema = new mongoose.Schema({
-    name: String,
-    number: String
+    name: {
+        type: String,
+        minlength: 3,
+        required: true
+    },
+    number: {
+        type: String,
+        minlength: 8,
+        required: true,
+        validate: {validator,message}
+    }
 })
 
 // make sure the returned documnet is in the format we desired
