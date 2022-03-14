@@ -19,7 +19,6 @@ beforeEach(async () => {
   console.log("database initialized")
 })
 
-
 describe("GET method", () => {
   test("the returned is json", async () => {
     await api.get("/api/blogs")
@@ -32,6 +31,11 @@ describe("GET method", () => {
   test("two blogs in total", async () => {
     const res = await api.get("/api/blogs")
     expect(res.body).toHaveLength(helper.initialBlogs.length)
+  })
+
+  test("_id property is parsed into id", async () => {
+    const res = await api.get("/api/blogs")
+    expect(res.body[0].id).toBeDefined()
   })
 })
 
@@ -59,6 +63,46 @@ describe("POST method", () => {
       return blog
     })
     expect(blogsAtEnd).toContainEqual(blog)
+  },100000)
+
+  test("missing likes dafualt to 0", async () => {
+    const badBlog = {
+      title: "Notes on Crisis",
+      author: "Nathan Tankus",
+      url: "https://www.crisesnotes.com/"
+    }
+
+    await api.post("/api/blogs")
+      .send(badBlog)
+      .expect(201)
+      .expect("Content-type",/application\/json/)
+
+    let blogsAtEnd = await helper.blogsInDB()
+    expect(blogsAtEnd[blogsAtEnd.length-1].likes).toBe(0)
+  })
+
+  test("missing title evokes 404", async () => {
+    const badBlog = {
+      author: "Nathan Tankus",
+      url: "https://www.crisesnotes.com/",
+      likes: 18
+    }
+
+    await api.post("/api/blogs")
+      .send(badBlog)
+      .expect(400)
+  })
+
+  test("missing url evokes 404", async () => {
+    const badBlog = {
+      title: "Notes on Crisis",
+      author: "Nathan Tankus",
+      likes: 18
+    }
+
+    await api.post("/api/blogs")
+      .send(badBlog)
+      .expect(400)
   })
 })
 
