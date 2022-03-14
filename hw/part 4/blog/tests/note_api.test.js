@@ -122,6 +122,27 @@ describe("DELETE method", () => {
   })
 })
 
+describe("PUT method", () => {
+  //1. status code 2. the entry is added (length and in within)
+  test("success with code 204 if id is valid", async () => {
+    let blogsAtEnd = await helper.blogsInDB()
+    const blogToBeUpdated = blogsAtEnd[0]
+    blogToBeUpdated.likes *= 2
+    await api.put(`/api/blogs/${blogToBeUpdated.id}`)
+      .send(blogToBeUpdated)
+      .expect(200)
+      .expect("Content-type",/application\/json/)
+    
+    blogsAtEnd = await helper.blogsInDB()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+    expect(blogsAtEnd).toContainEqual(blogToBeUpdated)
+  })
+
+  test("error with code 400 if id is invalid", async () => {
+    
+  })
+})
+
 //close the testing db 
 afterAll(() => {
   mongoose.connection.close()
