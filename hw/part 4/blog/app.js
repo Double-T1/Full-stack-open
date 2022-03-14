@@ -1,11 +1,12 @@
-const mongoUrl = require("./utils/config").mongoUrl
-const logger = require("./utils/logger")
 const express = require("express") //to better handle the whole node.js application
+require("express-async-errors")
 const app = express() //an instance of express
 const cors = require("cors") 
 const mongoose = require("mongoose") //to better manipulate mongoDB
 const blogsRouter = require("./controller/blogs")
 const middleware = require("./utils/middleware")
+const mongoUrl = require("./utils/config").mongoUrl
+const logger = require("./utils/logger")
 
 //connecting to database
 logger.info(`connecting to ${mongoUrl}`)
