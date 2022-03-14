@@ -1,14 +1,15 @@
-const blogsRouter = require('express').Router()
-const Blog =  require('../models/blogs')
+const blogsRouter = require("express").Router()
+const Blog =  require("../models/blogs")
 
-blogsRouter.get('/', (req, res) => {
+blogsRouter.get("/", (req, res) => {
+  console.log("router activated")
   Blog.find({})
     .then(blogs => {
       res.json(blogs)
     })
 })
 
-blogsRouter.post('/', (req, res) => {
+blogsRouter.post("/", (req, res) => {
   const blog = new Blog(req.body)
 
   blog.save()
@@ -17,7 +18,7 @@ blogsRouter.post('/', (req, res) => {
     })
 })
 
-blogsRouter.delete('/:id',(req, res) => {
+blogsRouter.delete("/:id",(req, res) => {
   Blog.findByIdAndDelete(req.params.id)
     .then(() => res.status(204).end())
 })

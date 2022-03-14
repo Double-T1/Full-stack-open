@@ -1,11 +1,11 @@
-const logger = require('./logger')
-const morgan = require('morgan')
+const logger = require("./logger")
+const morgan = require("morgan")
 
 //beware of the scope, i.e. 'this'
-morgan.token('content',(req,res) => {
+morgan.token("content",req => {
   return JSON.stringify(req.body) 
 })
-const requestLogger = morgan(':method :url :status :res[content-length] - :response-time ms :content')
+const requestLogger = morgan(":method :url :status :res[content-length] - :response-time ms :content")
 
 
 //errorhandler and unknownEndpoint
