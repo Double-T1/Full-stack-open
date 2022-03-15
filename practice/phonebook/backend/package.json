@@ -8,17 +8,22 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "log:prod": "heroku logs -tail",
-    "deploy": "git add . && "
-  
+    "deploy": "git add . && git commit -m update && git push heroku master",
+    "build:ui": "rm -rf build && cd ../frontend && rm -rf build && npm run build && cp -r build ../backend",
+    "deploy:full": "npm run build:ui && npm run deploy",
+    "lint": "eslint ."
   },
   "author": "Will",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "mongoose": "^6.2.4",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^8.10.0",
     "nodemon": "^2.0.15"
   }
 }

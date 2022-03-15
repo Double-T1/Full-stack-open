@@ -1,21 +1,36 @@
-GET http://localhost:3001/api/persons/ HTTP/1.1
+GET http://localhost:3001/ HTTP/1.1
 
 ###
-GET http://localhost:3001/ HTTP/1.1
+GET http://localhost:3001/api/persons/ HTTP/1.1
 
 ###
 GET http://localhost:3001/info/ HTTP/1.1
 
 ###
+//success expected
+GET http://localhost:3001/api/persons/6228766028119a0b5b94733c HTTP/1.1
+
+###
+//error expected => testing error handling
 GET http://localhost:3001/api/persons/5 HTTP/1.1
 
 ###
-DELETE http://localhost:3001/api/persons/2 HTTP/1.1
+DELETE http://localhost:3001/api/persons/6228818d0c4d38c7f8ea9b2c HTTP/1.1
 
 ###
 POST http://localhost:3001/api/persons HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "testing"
+    "name": "testing",
+    "number": "00-0000-0000"
+}
+
+###
+PUT http://localhost:3001/api/persons/6228818d0c4d38c7f8ea9b2c HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "testing",
+    "number": "00-0000-0001"
 }

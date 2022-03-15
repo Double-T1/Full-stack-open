@@ -40,27 +40,33 @@ const App = () => {
       && window.confirm(`${newName} is already in the phonebook, replace the old number with a new numebr?`)
     ) {
       server.update(id,{name: newName, number: newNumber})
-        .then(data => chainHelp(data))
+        .then(data => {
+          chainHelp(data)
+        })
         .then(() => {
           setAddedMessage(`Updated the phone number of ${newName} with ${newNumber}`)
           timer()
         })
-        .catch (() => {
-          setAddedMessage(`Information of ${newName} has already been removed from the server`)
+        .catch (error => {
+          setAddedMessage(error.response.data.message)
           timer()
         })
     } else {
       server.insert({name: newName, number: newNumber})
-        .then(data => chainHelp(data))
-        .then(() => {
-          setAddedMessage(`Added ${newName} into the phone book`)
+        .then(data => {
+          chainHelp(data)
+        })
+        .catch(error => {
+          setAddedMessage(error.response.data.message)
           timer()
         })
     }
   }
   const timer = () => {setTimeout(() => setAddedMessage(null), 5000)}
   const chainHelp = (data) => {
-    let a = persons.filter(ele => ele.id!==data.id).concat(data)
+    let a = persons.filter(ele => {
+      return ele.id!==data.id
+    }).concat(data)
     setPersons(a)
     setToShow(a)
     setNewName('')
