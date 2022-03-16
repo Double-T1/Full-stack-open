@@ -7,6 +7,18 @@ usersRouter.get('/', async (request, response) => {
 	response.json(users)
 })
 
+usersRouter.get('/test/',async(req,res) => {
+	res.json({
+		test: 'test'
+	})
+})
+
+usersRouter.get('/:id', async (req,res) => {
+	const user = await User.findById(req.params.id)
+	if(user) res.json(user)
+	else res.status(404).end()
+})
+
 usersRouter.post('/', async (request, response) => {
 	const { username, name, password } = request.body
 	const existingUser = await User.findOne({ username })  
@@ -28,6 +40,13 @@ usersRouter.post('/', async (request, response) => {
 	const savedUser = await user.save()
 
 	response.status(201).json(savedUser)
+})
+
+
+usersRouter.delete('/:id', async (req,res) => {
+	console.log(req.params.id)
+	await User.findByIdAndRemove(req.params.id)
+	res.status(204).end()
 })
 
 module.exports = usersRouter
