@@ -1,6 +1,7 @@
 const blogsRouter = require("express").Router()
 const Blog =  require("../models/blogs")
 const User = require("../models/users")
+const jwt = require("jsonwebtoken")
 
 blogsRouter.get("/", async (req, res) => {
   const blogLists = await Blog
@@ -8,9 +9,27 @@ blogsRouter.get("/", async (req, res) => {
   res.json(blogLists)
 })
 
+const getTokenFrom = req => {
+  //what does the req.get comes from here???
+  const authorization = req.get("authorization")
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    return authorization.substring(7)
+  }
+  return null
+}
+
 blogsRouter.post("/", async (req, res) => {
   const body = req.body
+  const token = getTokenFrom(req)
+  //SECRET is stored on the server, and token is from the browser
+  const decodedToken = jwt.verify(token,process.env.SECRET)
+  if(!decodedToken.id) {
+    return res.status(401).json({
+      error: "token missing or invalid"
+    })
+  }
   const user = await User.findById(body.user)
+
   const blog = new Blog({
     author: body.author,
     title: body.title,
