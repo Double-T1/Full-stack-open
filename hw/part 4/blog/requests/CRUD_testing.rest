@@ -17,13 +17,14 @@ GET http://localhost:3003/api/blogs HTTP/1.1
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
+Authorization: bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4iLCJpZCI6IjYyMzFlY2RlNzNlMGE0MWMxYjRmNjkwMiIsImlhdCI6MTY0NzQ0MTA4MCwiZXhwIjoxNjQ3NDQ4MjgwfQ.WcsGrvgCMIejz_eustS3FgH3dzeG19HU_2Vfv5NeR70
 
 {
   "title": "firstDay",
   "author": "Will",
   "url": "http://localhost:3003/",
   "likes": 69,
-  "user": "6231a51a00e8b91acf368100"
+  "user": "6231ecde73e0a41c1b4f6902"
 }
 
 ###

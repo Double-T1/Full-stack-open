@@ -24,6 +24,7 @@ app.use(cors()) //cross origin enabler
 app.use(express.json()) //body-parser
 //app.use(express.static('build'))
 app.use(middleware.requestLogger)
+app.use(middleware.tokenExtracter)
 
 app.use("/api/login",loginRouter)
 app.get("/", (req, res) => res.send("go to /api/blogs"))
