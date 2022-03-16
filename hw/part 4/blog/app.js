@@ -5,6 +5,7 @@ const cors = require("cors")
 const mongoose = require("mongoose") //to better manipulate mongoDB
 const blogsRouter = require("./controller/blogs")
 const usersRouter = require("./controller/users")
+const loginRouter = require("./controller/login")
 const middleware = require("./utils/middleware")
 const mongoUrl = require("./utils/config").mongoUrl
 const logger = require("./utils/logger")
@@ -24,9 +25,10 @@ app.use(express.json()) //body-parser
 //app.use(express.static('build'))
 app.use(middleware.requestLogger)
 
+app.use("/api/login",loginRouter)
 app.get("/", (req, res) => res.send("go to /api/blogs"))
-app.use("api/blogs",blogsRouter)
-app.use("api/users",usersRouter)
+app.use("/api/blogs",blogsRouter)
+app.use("/api/users",usersRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorhandler)

@@ -1,4 +1,4 @@
-const logger = require("./logger")
+// const logger = require("./logger")
 const morgan = require("morgan")
 
 //beware of the scope, i.e. 'this'
@@ -14,12 +14,11 @@ const unknownEndpoint = (req,res) => {
 }
 
 
-const errorhandler = (err,req,res,next) => {
-  logger.error(err.errors)
-  if (err.name === "ValidationError") {
-    res.status(400).json({err: err.messsage})
-  }
-  next(err)
+const errorhandler = (error,req,res,next) => {
+  if (error.name === "ValidationError") {
+    return res.status(401).json({error: error.message})
+  } 
+  next(error)
 }
 
 module.exports = {requestLogger,unknownEndpoint,errorhandler}
