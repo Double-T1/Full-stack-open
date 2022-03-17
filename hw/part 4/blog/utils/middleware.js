@@ -1,12 +1,14 @@
 // const logger = require("./logger")
 const morgan = require("morgan")
+const User = require("../models/users")
+const jwt = require("jsonwebtoken")
+
 
 //beware of the scope, i.e. 'this'
 morgan.token("content",req => {
   return JSON.stringify(req.body) 
 })
 const requestLogger = morgan(":method :url :status :res[content-length] - :response-time ms :content")
-
 
 const tokenExtracter = (req,res,next) => {
   //specified HTTP request header field which is case-insensitive match 
@@ -21,7 +23,18 @@ const tokenExtracter = (req,res,next) => {
   next() //calls the next middleware inline
 }
 
-
+//extract the users and set them as req.user
+//since it uses req.token, it has to come after req.token in app.js
+const userExtracter = async (req,res,next) => {
+  //token comprises of username and id
+  const decodedToken = jwt.verify(req.token,process.env.SECRET)
+  if (!decodedToken.id) {
+    return res.status(401).json({error: "invalid username or password"})
+  } else {
+    req.user = await User.findById(decodedToken.id)
+  }
+  next()
+}
 
 //errorhandler and unknownEndpoint
 const unknownEndpoint = (req,res) => {
@@ -31,7 +44,7 @@ const unknownEndpoint = (req,res) => {
 
 const errorhandler = (error,req,res,next) => {
   if (error.name === "ValidationError") {
-    return res.status(401).json({error: error.message})
+    return res.status(400).json({error: error.message})
   } else if (error.name === "JsonWebTokenError") {
     return res.status(401).json({error: "invalid token"})
   } else if (error.name === "TokenExpiredError") {
@@ -40,5 +53,5 @@ const errorhandler = (error,req,res,next) => {
   next(error)
 }
 
-module.exports = {requestLogger,tokenExtracter,unknownEndpoint,errorhandler}
+module.exports = {requestLogger,userExtracter,tokenExtracter,unknownEndpoint,errorhandler}
 

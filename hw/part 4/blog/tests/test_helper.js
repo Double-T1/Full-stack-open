@@ -1,18 +1,31 @@
 const Blog = require("../models/blogs")
 
+const initialUsers = [
+  {
+    username: "John",
+    name: "Schlong",
+    password: "1234567",
+    blogs: []
+  }
+]
+
 const initialBlogs = [
   {
     title: "2ality",
     author: "Dr. Axel Rauschmayer",
     url: "https://2ality.com/",
-    likes: 17
+    likes: 17,
+    user: null
   }, {
     title: "Daily Dev Tips",
     author: "Chris Bongers",
     url: "https://daily-dev-tips.com/",
-    likes: 69
+    likes: 69,
+    user: null
   }
 ]
+
+
 
 const blogsInDB = async () => {
   const blogs =  await Blog.find({})
@@ -25,4 +38,4 @@ const blogsInDB = async () => {
 
 
 
-module.exports = {initialBlogs,blogsInDB}
+module.exports = {initialUsers,initialBlogs,blogsInDB}

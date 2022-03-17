@@ -1,7 +1,7 @@
 const blogsRouter = require("express").Router()
 const Blog =  require("../models/blogs")
-const User = require("../models/users")
-const jwt = require("jsonwebtoken")
+const middleware = require("../utils/middleware")
+
 
 blogsRouter.get("/", async (req, res) => {
   const blogLists = await Blog
@@ -10,40 +10,56 @@ blogsRouter.get("/", async (req, res) => {
 })
 
 
-blogsRouter.post("/", async (req, res) => {
+blogsRouter.post("/", middleware.userExtracter,async (req, res) => {
   const body = req.body
-  //SECRET is stored on the server, and token is from the browser
-  const decodedToken = jwt.verify(req.token,process.env.SECRET)
-  if(!decodedToken.id) {
-    return res.status(401).json({
-      error: "token missing or invalid"
-    })
-  }
-  const user = await User.findById(body.user)
-
+  const user = req.user
+  
   const blog = new Blog({
     author: body.author,
     title: body.title,
     url: body.url,
     likes: body.likes,
-    user: user._id
+    user: user.id
   })
   //why didn't the toJSON middleware worked here?
 
   const savedBlog = await blog.save()
-  user.notes = user.blogs.concat(savedBlog._id)
+  user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
   res.status(201).json(savedBlog)
 })
 
-blogsRouter.delete("/:id",async (req, res) => {
+//only the owner/user of the blog can delete it
+//1. convert the token into userID
+//2. check if the userID is the blog user (blog user is an Object)
+//3. delete the blog document
+//4. delete the blog from the user bloglist
+blogsRouter.delete("/:id",middleware.userExtracter,async (req, res) => {
+  const user = req.user
+
+  const blog = await Blog.findById(req.params.id)
+  if (!blog) return res.status(401).json({error: "the blog is already deleted"})
+
+  if (blog.user.toString()!== user.id) {
+    return res.status(401).json({error: "user not the owner of the blog"})
+  }
+
   await Blog.findByIdAndDelete(req.params.id)
+  
+  user.blogs = user.blogs.filter(blogId => blogId.toString() !== req.params.id)
+  await user.save()
   res.status(204).end()
 })
 
 //updating the number of likes
-blogsRouter.put("/:id",async (req, res) => {
+blogsRouter.put("/:id",middleware.userExtracter,async (req, res) => {
+  const user = req.user
+  const blog = await Blog.findById(req.params.id)
+  if (blog.user.toString()!== user.id) {
+    return res.status(401).json({error: "user not the owner of the blog"})
+  }
+
   const updatedBlog = await Blog.findByIdAndUpdate(req.params.id,{likes: req.body.likes},{new:true})
   res.json(updatedBlog)
 })

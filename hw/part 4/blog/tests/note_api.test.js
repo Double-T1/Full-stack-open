@@ -3,27 +3,43 @@ const app = require("../app")
 const supertest = require("supertest")
 const api = supertest(app)
 const Blog = require("../models/blogs")
+const User = require("../models/users")
 const helper = require("./test_helper")
 
-
-
-//clear testing db and insert the sample we want to test on
+//0. clean the user database
+//1. create a user
+//2. log in to get token
+//3. set the user property of the blogs 
 beforeEach(async () => {
+  const user = helper.initialUsers[0]
+  await User.deleteMany({})
+  await api.post("/api/users")
+    .send(user)
+  console.log("userDB set")
+
+  const result = await api
+    .post("/api/login")
+    .send({username: user.username, password: user.password})
+  const token = result.body.token, id = result.body.id
+  console.log("login successful and token retrieved")
+
   await Blog.deleteMany({})
-  console.log("database cleared")
-  const blogObject = helper.initialBlogs.map(ele => new Blog(ele).save())
-  //do we need to store a noteObjects arr for each ele first
-  //then save them?? or can we save them while creating the instance/document?
-  // const promiseArr = blogObject.map(note => note.save())
+  const blogObject = helper.initialBlogs.map(ele => {
+    ele.user = id
+    return new Blog(ele)
+      .set("Authorization",`bearer ${token}`)  
+      .save()
+  })
   await Promise.all(blogObject)
-  console.log("database initialized")
+  console.log("blogDB set")
 })
 
 describe("GET method", () => {
-  test("the returned is json", async () => {
+  test("status 200 for getting the main entries", async () => {
     await api.get("/api/blogs")
       .expect(200)
       .expect("Content-type",/application\/json/)
+      
     //why chaining here? why not the synchronous syntax?
     //expect(blogs.status).toBe(200)
   })
@@ -43,6 +59,11 @@ describe("POST method", () => {
   //1. post operation successful
   //2. posted content is corrected
   test("posted a new entry", async () => {
+    const user = helper.initialUsers[0]
+    const result = await api
+      .post("/api/login")
+      .send({username: user.username, password: user.password})
+    const token = result.body.token
     const blog = {
       title: "Notes on Crisis",
       author: "Nathan Tankus",
@@ -52,6 +73,7 @@ describe("POST method", () => {
 
     //why is there a content type for the returned of a post action?
     await api.post("/api/blogs")
+      .auth(token, {type: "bearer"})
       .send(blog)
       .expect(201)
       .expect("Content-type",/application\/json/)
@@ -60,12 +82,19 @@ describe("POST method", () => {
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length+1)
     blogsAtEnd = blogsAtEnd.map(blog => {
       delete blog.id
+      delete blog.user
       return blog
     })
     expect(blogsAtEnd).toContainEqual(blog)
   },100000)
 
   test("missing likes dafualt to 0", async () => {
+    const user = helper.initialUsers[0]
+    const result = await api
+      .post("/api/login")
+      .send({username: user.username, password: user.password})
+    const token = result.body.token
+
     const badBlog = {
       title: "Notes on Crisis",
       author: "Nathan Tankus",
@@ -73,6 +102,7 @@ describe("POST method", () => {
     }
 
     await api.post("/api/blogs")
+      .auth(token, {type: "bearer"})
       .send(badBlog)
       .expect(201)
       .expect("Content-type",/application\/json/)
@@ -81,7 +111,13 @@ describe("POST method", () => {
     expect(blogsAtEnd[blogsAtEnd.length-1].likes).toBe(0)
   })
 
-  test("missing title evokes 404", async () => {
+  test("missing title evokes 400", async () => {
+    const user = helper.initialUsers[0]
+    const result = await api
+      .post("/api/login")
+      .send({username: user.username, password: user.password})
+    const token = result.body.token
+
     const badBlog = {
       author: "Nathan Tankus",
       url: "https://www.crisesnotes.com/",
@@ -89,11 +125,18 @@ describe("POST method", () => {
     }
 
     await api.post("/api/blogs")
+      .auth(token, {type: "bearer"})
       .send(badBlog)
       .expect(400)
   })
 
-  test("missing url evokes 404", async () => {
+  test("missing url evokes 400", async () => {
+    const user = helper.initialUsers[0]
+    const result = await api
+      .post("/api/login")
+      .send({username: user.username, password: user.password})
+    const token = result.body.token
+
     const badBlog = {
       title: "Notes on Crisis",
       author: "Nathan Tankus",
@@ -101,6 +144,7 @@ describe("POST method", () => {
     }
 
     await api.post("/api/blogs")
+      .auth(token, {type: "bearer"})
       .send(badBlog)
       .expect(400)
   })
