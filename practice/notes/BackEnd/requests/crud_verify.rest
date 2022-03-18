@@ -3,8 +3,8 @@ POST http://localhost:3001/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "mluukkai",
-    "password": "salainent"
+    "username": "will",
+    "password": "1234"
 }
 
 
@@ -38,9 +38,9 @@ POST http://localhost:3001/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "mluukkai",
+    "username": "will",
     "name": "hehehaha",
-    "password": "salainent"
+    "password": "1234"
 }
 
 ###
