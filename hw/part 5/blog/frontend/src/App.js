@@ -12,7 +12,7 @@ const App = () => {
   const [title,setTitle] = useState('')
   const [author,setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message,setMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -32,15 +32,24 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
 
-    console.log(`logging in with ${username} ${password}`)
-    const user = await loginService.login({username,password})
+    try {
+      console.log(`logging in with ${username} ${password}`)
+      const user = await loginService.login({username,password})
 
-    window.localStorage.setItem('loggedUser', JSON.stringify(user))
-    blogService.setToken(user.token)
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      blogService.setToken(user.token)
 
-    setUser(user)
-    setPassword('')
-    setUsername('')
+      setUser(user)
+      setPassword('')
+      setUsername('')
+    } catch (e) {
+      console.log("error")
+      setMessage("wrong username or password")
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+    
   }
 
   const handleLogout = async e => {
@@ -58,11 +67,23 @@ const App = () => {
     console.log("creating a new blog")
 
     const addedBlog = await blogService.addOne({author, title, url})
+
+    setMessage(`a new blog ${title} by ${author} is added`)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+
     const newBlogList = blogs.concat(addedBlog)
     setBlogs(newBlogList)
     setAuthor('')
     setTitle('')
     setUrl('')
+  }
+
+  const handleClearAll = async e => {
+    e.preventDefault()
+    await blogService.clearAll()
+    setBlogs([])
   }
 
   return (
@@ -74,20 +95,27 @@ const App = () => {
           handleLogin={handleLogin}
           setUsername={setUsername}
           setPassword={setPassword}
-          errorMessage={errorMessage}
+          message={message}
         /> :
-        <Blog 
-          user={user}
-          handleLogout={handleLogout}
-          title={title}
-          setTitle={setTitle}
-          author={author}
-          setAuthor={setAuthor}
-          url={url}
-          setUrl={setUrl}
-          handleCreate={handleCreate}
-          blogs={blogs}
-        />
+        <>
+          <button onClick={handleClearAll}>
+            clear all blogs
+            (dev only)
+          </button>
+          <Blog 
+            user={user}
+            handleLogout={handleLogout}
+            title={title}
+            setTitle={setTitle}
+            author={author}
+            setAuthor={setAuthor}
+            url={url}
+            setUrl={setUrl}
+            handleCreate={handleCreate}
+            blogs={blogs}
+            message={message}
+          />
+        </>
       }
     </div>
   )

@@ -1,4 +1,5 @@
 import React from 'react'
+import Notification from './Notificaiton'
 
 const BlogList = ({blog}) => (
   <div>
@@ -6,16 +7,17 @@ const BlogList = ({blog}) => (
   </div>  
 )
 
-const Blog = ({user,handleLogout,title,setTitle,author,setAuthor,url,setUrl,handleCreate,blogs}) => {
+const Blog = ({user,handleLogout,title,setTitle,author,setAuthor,url,setUrl,handleCreate,blogs,message}) => {
   const userSession = () => {
     return (
-      <>
+      <div>
         <h2>blogs</h2>
+        <Notification message={message} type="blog"/>
         <div>
           {user.name} logged in
           <button onClick={handleLogout}>logout</button>
         </div> 
-      </>
+      </div>
     )
   }
 

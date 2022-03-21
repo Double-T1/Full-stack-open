@@ -1,11 +1,11 @@
 import React from "react"
-import LoginNotification from "./LoginNotificaiton"
+import Notification from "./Notificaiton"
 
-const LoginForm = ({username,password,handleLogin,setUsername,setPassword,errorMessage}) => {
+const LoginForm = ({username,password,handleLogin,setUsername,setPassword,message}) => {
     return (
         <div>
             <h2>log in to application</h2>
-            <LoginNotification errorMessage={errorMessage}/>
+            <Notification message={message} type="login"/>
             <form onSubmit={handleLogin}>
             <div>
                 username: 

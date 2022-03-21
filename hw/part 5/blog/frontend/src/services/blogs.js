@@ -19,5 +19,10 @@ const addOne = async newObj => {
   const res = await axios.post(baseUrl,newObj,config)
   return res.data
 }
+
+const clearAll = async () => {
+  await axios.delete(baseUrl)
+  return 
+}
  
-export default { getAll, addOne ,setToken }
+export default { getAll, addOne ,setToken , clearAll}
