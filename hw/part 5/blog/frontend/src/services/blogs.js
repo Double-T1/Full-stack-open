@@ -20,9 +20,23 @@ const addOne = async newObj => {
   return res.data
 }
 
+const updateLikes = async ({id,newLikes}) => {
+  const config = {
+    headers : {"Authorization": token}
+  }
+  console.log("start sending to backend")
+
+  try {
+    const res = await axios.put(`${baseUrl}/${id}`,{likes: newLikes},config) 
+    return res.data
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 const clearAll = async () => {
   await axios.delete(baseUrl)
   return 
 }
  
-export default { getAll, addOne ,setToken , clearAll}
+export default { getAll, addOne ,setToken , clearAll, updateLikes}
