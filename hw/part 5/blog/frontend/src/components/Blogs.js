@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const BlogList = ({blog,handleLike}) => {
+const BlogList = ({user,blog,handleLike,handleRemove}) => {
   const [view, setView] = useState(false)
   const [buttonLabel, setButtonLabel] = useState("view")
 
@@ -11,6 +11,8 @@ const BlogList = ({blog,handleLike}) => {
     setView(!view)
   }
 
+  
+
   const changeLikes = async e => {
     e.preventDefault()
     const obj = {
@@ -20,6 +22,26 @@ const BlogList = ({blog,handleLike}) => {
       newLikes: blog.likes+1
     }
     await handleLike(obj)
+  }
+
+  const removeBlog = async e => {
+    e.preventDefault()
+
+    const result = window.confirm(`do you want to delete ${blog.title} by ${blog.author}?`)
+    if (result) {
+      await handleRemove({
+        id: blog.id,
+        title: blog.title,
+        author: blog.author
+      })
+    }
+    
+  }
+
+  const showIfOwener = {
+    display: blog.user.id === user.id? "" : "none",
+    fontColor: "white",
+    backgroundColor: "orange"
   }
 
   const style = {
@@ -39,21 +61,32 @@ const BlogList = ({blog,handleLike}) => {
       </div>
       <div style={showWhenView}>
         {blog.url} <br /> 
-        {blog.likes} <button onClick={changeLikes}>like</button>
+        {blog.likes} <button onClick={changeLikes}>like</button> <br />
+        {blog.user.name} <br />
+        <button style={showIfOwener} onClick={removeBlog}>remove this blog</button>
       </div>
     </div>
   )
 }
 
-const Blogs = ({blogs, handleLike}) => {
-    return (
-      <div>
-        <h2>logged blogs</h2>
-        {blogs.map(blog =>
-          <BlogList key={blog.id} blog={blog} handleLike={handleLike}/>
-        )}
-      </div>
-    )
+const Blogs = ({user,blogs, handleLike,handleRemove}) => {
+  //insanely inefficient => sorting everytime we rerenders
+  blogs = [...blogs].sort((a,b) => a.likes-b.likes)
+
+  return (
+    <div>
+      <h2>logged blogs</h2>
+      {blogs.map(blog =>
+        <BlogList 
+          key={blog.id} 
+          user={user} 
+          blog={blog} 
+          handleLike={handleLike}
+          handleRemove={handleRemove}
+        />
+      )}
+    </div>
+  )
 }
 
 export default Blogs

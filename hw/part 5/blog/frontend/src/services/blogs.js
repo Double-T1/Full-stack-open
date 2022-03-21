@@ -24,14 +24,16 @@ const updateLikes = async ({id,newLikes}) => {
   const config = {
     headers : {"Authorization": token}
   }
-  console.log("start sending to backend")
+  const res = await axios.put(`${baseUrl}/${id}`,{likes: newLikes},config) 
+  return res.data
+}
 
-  try {
-    const res = await axios.put(`${baseUrl}/${id}`,{likes: newLikes},config) 
-    return res.data
-  } catch (e) {
-    console.log(e)
+const removeOne = async ({id}) => {
+  const config = {
+    headers : {"Authorization": token}
   }
+  await axios.delete(`${baseUrl}/${id}`,config)
+  return 
 }
 
 const clearAll = async () => {
@@ -39,4 +41,4 @@ const clearAll = async () => {
   return 
 }
  
-export default { getAll, addOne ,setToken , clearAll, updateLikes}
+export default { getAll, addOne ,setToken , clearAll, removeOne, updateLikes}

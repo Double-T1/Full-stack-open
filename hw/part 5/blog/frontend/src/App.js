@@ -36,7 +36,6 @@ const App = () => {
 
       setUser(user)
     } catch (e) {
-      console.log("error")
       setMessage("wrong username or password")
       setTimeout(() => {
         setMessage(null)
@@ -78,14 +77,39 @@ const App = () => {
   const handleLike = async ({title,author,id,newLikes}) => {
     try {
       console.log('start updating')
-      const updatedBlog = await blogService.updateLikes({id,newLikes})
+      await blogService.updateLikes({id,newLikes})
 
       setMessage(`blog ${title} by ${author} is updated`)
       setTimeout(() => {
         setMessage(null)
       }, 1000)
+      
+      const newBlogList = []
+      for (let blog of blogs) {
+        if (blog.id === id) blog.likes = newLikes 
+        newBlogList.push(blog)
+      }  
+      setBlogs(newBlogList)
+    } catch (e) {
+      console.log(e)
+      setMessage(e)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }
 
-      const newBlogList = blogs.concat(updatedBlog)
+  const handleRemove = async ({id,title,author}) => {
+    try {
+      console.log("start deleting")
+      await blogService.removeOne({id})
+
+      setMessage(`blog ${title} by ${author} is deleted`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 1000)
+
+      const newBlogList = blogs.filter(blog => blog.id !== id)
       setBlogs(newBlogList)
     } catch (e) {
       console.log(e)
@@ -130,7 +154,12 @@ const App = () => {
       }
 
       <div>
-        <Blogs blogs={blogs} handleLike={handleLike}/>
+        <Blogs 
+          user={user} 
+          blogs={blogs} 
+          handleLike={handleLike}
+          handleRemove={handleRemove}
+        />
       </div>
     </div>
   )
