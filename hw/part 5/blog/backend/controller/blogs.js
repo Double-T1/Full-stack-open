@@ -38,8 +38,9 @@ blogsRouter.delete("/:id",middleware.userExtracter,async (req, res) => {
   const user = req.user
 
   const blog = await Blog.findById(req.params.id)
-  if (!blog) return res.status(401).json({error: "the blog is already deleted"})
-
+  if (!blog) {
+    return res.status(401).json({error: "the blog is already deleted"})
+  }
   if (blog.user.toString()!== user.id) {
     return res.status(401).json({error: "user not the owner of the blog"})
   }

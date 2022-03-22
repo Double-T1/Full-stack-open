@@ -56,10 +56,10 @@ DELETE  http://localhost:3003/api/users HTTP/1.1
 ###
 PUT http://localhost:3003/api/blogs/62380d7af1718fb51919d33a HTTP/1.1
 Content-Type:  application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IldpbGwiLCJpZCI6IjYyMzQ1ZDhiNzQyOGViMDg3MjJiYTg5MiIsImlhdCI6MTY0Nzg2NTEwNCwiZXhwIjoxNjQ3ODcyMzA0fQ.lN7nxCjIaaC2Gc1DYMLFtrpv_kD2o-5QArQlViQPP_U
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IldpbGwiLCJpZCI6IjYyMzQ1ZDhiNzQyOGViMDg3MjJiYTg5MiIsImlhdCI6MTY0Nzg3MjgzNywiZXhwIjoxNjQ3ODgwMDM3fQ.cHSUAQWXl2Bpj2ey-GxZ-1MzLac-fwIpeMm2Wi7prn4
 
 {
-  "likes": 3 
+  "likes": 5
 }
 
 
