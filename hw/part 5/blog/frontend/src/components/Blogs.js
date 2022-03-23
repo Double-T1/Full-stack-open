@@ -37,7 +37,7 @@ const BlogList = ({ user,blog,handleLike,handleRemove }) => {
   }
 
   const showIfOwener = {
-    display: blog.user.id === user.id? '' : 'none',
+    display: user && blog.user.id === user.id? '' : 'none',
     fontColor: 'white',
     backgroundColor: 'orange'
   }

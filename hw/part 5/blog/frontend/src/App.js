@@ -4,8 +4,8 @@ import loginService from './services/login'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import Toggable from './components/Toggable'
-import Blogs from "./components/Blogs"
-import UserSession from "./components/UserSession"
+import Blogs from './components/Blogs'
+import UserSession from './components/UserSession'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -27,36 +27,36 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async ({username,password}) => {
+  const handleLogin = async ({ username,password }) => {
     try {
-      const user = await loginService.login({username,password})
+      const user = await loginService.login({ username,password })
 
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
 
       setUser(user)
     } catch (e) {
-      setMessage("wrong username or password")
+      setMessage('wrong username or password')
       setTimeout(() => {
         setMessage(null)
       }, 5000)
     }
-    
+
   }
 
   const handleLogout = async e => {
     e.preventDefault()
-    console.log("logging out")
-    
+    console.log('logging out')
+
     window.localStorage.removeItem('loggedUser')
     blogService.setToken(null)
 
     setUser(null)
-  } 
+  }
 
-  const handleCreate = async ({author,title,url}) => {
+  const handleCreate = async ({ author,title,url }) => {
     try {
-      const addedBlog = await blogService.addOne({author, title, url})
+      const addedBlog = await blogService.addOne({ author, title, url })
 
       setMessage(`a new blog ${title} by ${author} is added`)
       setTimeout(() => {
@@ -74,21 +74,22 @@ const App = () => {
     }
   }
 
-  const handleLike = async ({title,author,id,newLikes}) => {
+  const handleLike = async ({ title,author,id,newLikes }) => {
     try {
       console.log('start updating')
-      await blogService.updateLikes({id,newLikes})
+      await blogService.updateLikes({ id,newLikes })
 
       setMessage(`blog ${title} by ${author} is updated`)
       setTimeout(() => {
         setMessage(null)
       }, 1000)
-      
+
       const newBlogList = []
       for (let blog of blogs) {
-        if (blog.id === id) blog.likes = newLikes 
+        if (blog.id === id) blog.likes = newLikes
         newBlogList.push(blog)
-      }  
+      }
+      console.log(newBlogList)
       setBlogs(newBlogList)
     } catch (e) {
       console.log(e)
@@ -99,10 +100,10 @@ const App = () => {
     }
   }
 
-  const handleRemove = async ({id,title,author}) => {
+  const handleRemove = async ({ id,title,author }) => {
     try {
-      console.log("start deleting")
-      await blogService.removeOne({id})
+      console.log('start deleting')
+      await blogService.removeOne({ id })
 
       setMessage(`blog ${title} by ${author} is deleted`)
       setTimeout(() => {
@@ -130,18 +131,18 @@ const App = () => {
     <div>
       {user === null?
         <Toggable buttonLabel="login">
-          <LoginForm   
+          <LoginForm
             handleLogin={handleLogin}
             message={message}
           />
         </Toggable>
-         :
+        :
         <>
           <button onClick={handleClearAll}>
             clear all blogs
             (dev only)
-          </button> 
-          <UserSession 
+          </button>
+          <UserSession
             message={message}
             handleLogout={handleLogout}
             user={user}
@@ -154,9 +155,9 @@ const App = () => {
       }
 
       <div>
-        <Blogs 
-          user={user} 
-          blogs={blogs} 
+        <Blogs
+          user={user}
+          blogs={blogs}
           handleLike={handleLike}
           handleRemove={handleRemove}
         />

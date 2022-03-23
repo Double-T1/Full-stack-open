@@ -14,31 +14,28 @@ const getAll = async () => {
 
 const addOne = async newObj => {
   const config = {
-    headers : {"Authorization": token}
+    headers : { 'Authorization': token }
   }
   const res = await axios.post(baseUrl,newObj,config)
   return res.data
 }
 
-const updateLikes = async ({id,newLikes}) => {
-  const config = {
-    headers : {"Authorization": token}
-  }
-  const res = await axios.put(`${baseUrl}/${id}`,{likes: newLikes},config) 
+const updateLikes = async ({ id,newLikes }) => {
+  const res = await axios.put(`${baseUrl}/${id}`,{ likes: newLikes })
   return res.data
 }
 
-const removeOne = async ({id}) => {
+const removeOne = async ({ id }) => {
   const config = {
-    headers : {"Authorization": token}
+    headers : { 'Authorization': token }
   }
   await axios.delete(`${baseUrl}/${id}`,config)
-  return 
+  return
 }
 
 const clearAll = async () => {
   await axios.delete(baseUrl)
-  return 
+  return
 }
- 
-export default { getAll, addOne ,setToken , clearAll, removeOne, updateLikes}
+
+export default { getAll, addOne ,setToken , clearAll, removeOne, updateLikes }
