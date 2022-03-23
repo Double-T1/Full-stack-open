@@ -2,7 +2,6 @@ const blogsRouter = require("express").Router()
 const Blog =  require("../models/blogs")
 const middleware = require("../utils/middleware")
 
-
 blogsRouter.get("/", async (req, res) => {
   const blogLists = await Blog
     .find({}).populate("user",{username: 1, name: 1})
@@ -53,13 +52,7 @@ blogsRouter.delete("/:id",middleware.userExtracter,async (req, res) => {
 })
 
 //updating the number of likes
-blogsRouter.put("/:id",middleware.userExtracter,async (req, res) => {
-  const user = req.user
-  const blog = await Blog.findById(req.params.id)
-  if (blog.user.toString()!== user.id) {
-    return res.status(401).json({error: "user not the owner of the blog"})
-  }
-
+blogsRouter.put("/:id",async (req, res) => {
   const updatedBlog = await Blog.findByIdAndUpdate(req.params.id,{likes: req.body.likes},{new:true})
   res.json(updatedBlog)
 })
