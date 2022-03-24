@@ -27,6 +27,10 @@ app.use(express.json()) //body-parser
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtracter)
 
+if (process.env.NODE_ENV === "test") {
+  const testingRouter = require("./controller/testing")
+  app.use("/api/testing",testingRouter)
+}
 app.use("/api/login",loginRouter)
 app.get("/", (req, res) => res.send("go to /api/blogs"))
 app.use("/api/blogs",blogsRouter)

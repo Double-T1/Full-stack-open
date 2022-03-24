@@ -25,13 +25,13 @@ const tokenExtracter = (req,res,next) => {
 //since it uses req.token, it has to come after req.token in app.js
 const userExtracter = async (req,res,next) => {
   //token comprises of username and id
-  const decodedToken = jwt.verify(req.token,process.env.SECRET)
+  const decodedToken = await jwt.verify(req.token,process.env.SECRET)
   if (!decodedToken.id) {
     return res.status(401).json({error: "invalid username or password"})
   } else {
     req.user = await User.findById(decodedToken.id)
+    next()
   }
-  next()
 }
 
 //errorhandler and unknownEndpoint

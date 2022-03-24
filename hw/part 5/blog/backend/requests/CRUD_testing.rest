@@ -3,7 +3,7 @@ POST http://localhost:3003/api/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "Will",
+  "username": "will",
   "password": "1234"
 }
 
@@ -18,14 +18,12 @@ GET http://localhost:3003/api/blogs HTTP/1.1
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4iLCJpZCI6IjYyMzFmYjBiOGZjMDgzNGNiMjU0ZTc0ZSIsImlhdCI6MTY0NzQ0NDU0NywiZXhwIjoxNjQ3NDUxNzQ3fQ.fbee_kqarHF_wmUUfhYreNHbLBOmq8LQEcoCgtTvvr0
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IndpbGwiLCJpZCI6IjYyM2IzN2MxNjMxZWE0MDEwZDI1NDk3MyIsImlhdCI6MTY0ODA0ODA4NSwiZXhwIjoxNjQ4MDU1Mjg1fQ.BbNjLt0JUZyRp4MVmyDsC7JnswqZyoiSBkyn7FtZkHs
 
 {
   "title": "forDelete",
   "author": "Will",
-  "url": "http://localhost:3003/",
-  "likes": 69,
-  "user": "6231fb0b8fc0834cb254e74e"
+  "url": "http://localhost:3003/"
 }
 
 ###
@@ -43,7 +41,7 @@ POST http://localhost:3003/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "Will",
+  "username": "will",
   "name": "dick",
   "password": "1234",
   "blogs": []

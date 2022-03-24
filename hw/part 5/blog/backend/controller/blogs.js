@@ -12,15 +12,12 @@ blogsRouter.get("/", async (req, res) => {
 blogsRouter.post("/", middleware.userExtracter,async (req, res) => {
   const body = req.body
   const user = req.user
-  
   const blog = new Blog({
     author: body.author,
     title: body.title,
     url: body.url,
-    likes: body.likes,
-    user: user.id
+    user: user._id
   })
-
   const savedBlog = await blog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
