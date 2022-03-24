@@ -2,7 +2,7 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Toggable = (props) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(true)
 
   const showWhenVisible = { display: visible? '' : 'none' }
   const hideWhenVisible = { display: visible? 'none' : '' }

@@ -31,6 +31,7 @@ const Blog = ({ handleCreate }) => {
             // we only want the field/property target
             onChange={handleChange(setTitle)}
             placeholder='type the title'
+            id='title'
           />
         </div>
         <div>
@@ -42,6 +43,7 @@ const Blog = ({ handleCreate }) => {
             // we only want the field/property target
             onChange={handleChange(setAuthor)}
             placeholder='type the author'
+            id='author'
           />
         </div>
         <div>
@@ -53,9 +55,10 @@ const Blog = ({ handleCreate }) => {
             // we only want the field/property target
             onChange={handleChange(setUrl)}
             placeholder='type the url'
+            id='url'
           />
         </div>
-        <button type='submit'>create</button>
+        <button type='submit' id='create-blog-button'>create</button>
       </form>
     </div>
   )

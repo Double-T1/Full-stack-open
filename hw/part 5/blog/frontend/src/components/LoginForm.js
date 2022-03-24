@@ -16,30 +16,32 @@ const LoginForm = ({ handleLogin,message }) => {
 
   return (
     <div>
-      <h2>log in to application</h2>
-      <Notification message={message} type="login"/>
+      <h2>log in to the application</h2>
+      <Notification message={message} type="login" />
       <form onSubmit={handleSubmit}>
         <div>
-                    username:
+          username:
           <input
             type="text"
             name="Username"
             value={username}
             // we only want the field/property target
             onChange={({ target }) => setUsername(target.value)}
+            id="username"
           />
         </div>
         <div>
-                    password:
+          password:
           <input
             type="password"
             name="Password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
+            id="password"
           />
         </div>
         {/* a submit type button delegate its function to its parent */}
-        <button type='submit'>login</button>
+        <button type='submit' id='login-button'>login</button>
       </form>
     </div>
   )

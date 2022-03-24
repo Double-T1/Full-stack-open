@@ -33,7 +33,6 @@ const BlogList = ({ user,blog,handleLike,handleRemove }) => {
         author: blog.author
       })
     }
-
   }
 
   const showIfOwener = {
@@ -52,16 +51,19 @@ const BlogList = ({ user,blog,handleLike,handleRemove }) => {
   }
 
   return (
-    <div style={style}>
+    <div style={style} className='blog'>
       <div className='permanent'>
         {blog.title} {blog.author}
-        <button onClick={handleView}>{buttonLabel}</button>
+        <button onClick={handleView} className='view-button' >{buttonLabel}</button>
       </div>
       <div style={showWhenView} className='temp'>
         {blog.url} <br />
-        {blog.likes} <button onClick={changeLikes}>like</button> <br />
+        <div className='blog-likes'>
+          {blog.likes}
+          <button onClick={changeLikes} className='like-button'>like</button>
+        </div> <br />
         {blog.user.name} <br />
-        <button style={showIfOwener} onClick={removeBlog}>remove this blog</button>
+        <button style={showIfOwener} onClick={removeBlog} className='remove-button'>remove this blog</button>
       </div>
     </div>
   )

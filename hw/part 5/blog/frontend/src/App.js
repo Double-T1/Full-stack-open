@@ -41,7 +41,6 @@ const App = () => {
         setMessage(null)
       }, 5000)
     }
-
   }
 
   const handleLogout = async e => {
@@ -62,7 +61,6 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
       }, 5000)
-
       const newBlogList = blogs.concat(addedBlog)
       setBlogs(newBlogList)
     } catch (e) {
@@ -76,7 +74,6 @@ const App = () => {
 
   const handleLike = async ({ title,author,id,newLikes }) => {
     try {
-      console.log('start updating')
       await blogService.updateLikes({ id,newLikes })
 
       setMessage(`blog ${title} by ${author} is updated`)
@@ -89,7 +86,6 @@ const App = () => {
         if (blog.id === id) blog.likes = newLikes
         newBlogList.push(blog)
       }
-      console.log(newBlogList)
       setBlogs(newBlogList)
     } catch (e) {
       console.log(e)
@@ -130,7 +126,7 @@ const App = () => {
   return (
     <div>
       {user === null?
-        <Toggable buttonLabel="login">
+        <Toggable buttonLabel="login" id="login-toggable">
           <LoginForm
             handleLogin={handleLogin}
             message={message}
