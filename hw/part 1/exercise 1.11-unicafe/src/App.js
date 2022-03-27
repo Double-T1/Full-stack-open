@@ -36,7 +36,6 @@ const AllStats = ({good,neutral,bad}) => {
       <h5>no feedback given</h5>
     </div>
   )
-  
 }
 
 const App = () => {
